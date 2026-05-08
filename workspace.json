@@ -1,0 +1,17 @@
+{
+  "modules": [],
+  "libraries": [
+    {
+      "name": "android-36",
+      "type": null,
+      "roots": [
+        {
+          "path": "/home/Android/Sdk/platforms/android-36/android.jar",
+          "type": "CLASSES"
+        }
+      ]
+    }
+  ],
+  "sdks": [],
+  "kotlinSettings": []
+}

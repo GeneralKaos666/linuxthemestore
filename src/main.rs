@@ -24,7 +24,6 @@ use gtk4::{Button, ContentFit, CssProvider, GestureClick, License};
 use reqwest::blocking::Client;
 use serde::de::Deserializer;
 use serde::{Deserialize, Serialize};
-use std::cell::Cell;
 use std::cell::RefCell;
 use std::collections::HashMap;
 use walkdir::WalkDir;
@@ -442,7 +441,7 @@ fn fetch_url(url: &String, file_name: String) -> Result<()> {
     Ok(())
 }
 fn install_theme(downloaddetail: &DownloadDetail, themetype: &Catalog) -> Result<()> {
-    let mut path = String::from("/tmp/themedownloadfiles/");
+    let mut path = String::from("/data/data/com.termux/files/usr/tmp/themedownloadfiles/");
     path.push_str(themetype.to_string());
     path.push_str("/");
 
@@ -691,7 +690,7 @@ fn downloadthumb(each_product: &Product) -> Result<()> {
         return Ok(());
     }
     let firstimage = firstimage.unwrap();
-    let save_path = "/tmp/themeinstaller/cache/".to_string() + &firstimage;
+    let save_path = "/data/data/com.termux/files/usr/tmp/themeinstaller/cache/".to_string() + &firstimage;
     if !std::path::Path::new(&save_path).exists() {
         let mut save_dir = save_path.to_string();
         save_dir.push_str(&firstimage);
@@ -712,7 +711,7 @@ fn downloadotherimages(each_product: &Product) -> Result<()> {
     //println!("Got inside Download Thumbnail");
 
     for each_image in &each_product.previewpics[1..] {
-        let save_path = "/tmp/themeinstaller/cache/".to_string() + &each_image;
+        let save_path = "/data/data/com.termux/files/usr/tmp/themeinstaller/cache/".to_string() + &each_image;
         if !std::path::Path::new(&save_path).exists() {
             let mut save_dir = save_path.to_string();
             save_dir.push_str(&each_image);
@@ -747,7 +746,7 @@ fn _downloadthumbs(products: Vec<Product>) -> Result<()> {
             //println!("Image link : {:?}", image_small.clone().unwrap());
             //println!("In async tokio");
             for image_small in image_small_list {
-                let save_path = "/tmp/themeinstaller/cache/".to_string() + &image_small;
+                let save_path = "/data/data/com.termux/files/usr/tmp/themeinstaller/cache/".to_string() + &image_small;
                 if !std::path::Path::new(&save_path).exists() {
                     let mut save_dir = save_path.to_string();
                     save_dir.push_str(&image_small);
@@ -870,7 +869,7 @@ fn build_installed_page(
     view_stack: &ViewStack,
     outer_view_stack: &GtkBox,
     theme_type: &Catalog,
-    window: &ApplicationWindow,
+    _window: &ApplicationWindow,
 ) {
     let themecategoryloadingpage = GtkBox::new(Orientation::Vertical, 10);
     themecategoryloadingpage.add_css_class("background");
@@ -915,7 +914,7 @@ fn build_installed_page(
 }
 // contentbox function
 fn build_flowbox_for_page(each_product: &Product, flowbox: &FlowBox, window: &ApplicationWindow) {
-    let imgpath = "/tmp/themeinstaller/cache/".to_string() + &each_product.previewpics[0];
+    let imgpath = "/data/data/com.termux/files/usr/tmp/themeinstaller/cache/".to_string() + &each_product.previewpics[0];
     let img = Picture::builder()
         .valign(Align::Center)
         .hexpand_set(false)
@@ -1255,7 +1254,7 @@ fn build_flowbox_for_page(each_product: &Product, flowbox: &FlowBox, window: &Ap
                         let carousal_ind = CarouselIndicatorDots::builder().carousel(&carousal).build();
 
                         for path in &previewpics_clone{
-                        let imgpath = "/tmp/themeinstaller/cache/".to_string() + path;
+                        let imgpath = "/data/data/com.termux/files/usr/tmp/themeinstaller/cache/".to_string() + path;
                         let img = Picture::builder()
                             .valign(Align::Center)
                             .hexpand_set(true)
@@ -1737,7 +1736,7 @@ fn build_content_box(
 fn build_installed_content_box(
     installed_page: &InstalledTheme,
     view_stack: &ViewStack,
-    window: &ApplicationWindow,
+    _window: &ApplicationWindow,
 ) {
     let themecategory_contentbox = GtkBox::new(Orientation::Vertical, 20);
     //window.set_height_request(1024);

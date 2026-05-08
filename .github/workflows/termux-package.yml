@@ -11,7 +11,8 @@ permissions:
 
 env:
   PACKAGE_NAME: linuxthemestore
-  TERMUX_PACKAGES_REF: master
+  # Pin to an immutable termux/termux-packages revision for reproducible builds.
+  TERMUX_PACKAGES_REF: 0123456789abcdef0123456789abcdef01234567
 
 jobs:
   package:

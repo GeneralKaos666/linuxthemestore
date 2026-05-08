@@ -1,0 +1,89 @@
+name: Build Termux package
+
+on:
+  workflow_dispatch:
+  release:
+    types:
+      - published
+
+permissions:
+  contents: read
+
+env:
+  PACKAGE_NAME: linuxthemestore
+  TERMUX_PACKAGES_REF: master
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out project
+        uses: actions/checkout@v4
+
+      - name: Check out Termux packaging tools
+        uses: actions/checkout@v4
+        with:
+          repository: termux/termux-packages
+          ref: ${{ env.TERMUX_PACKAGES_REF }}
+          path: termux-packages
+
+      - name: Render Termux package recipe
+        env:
+          RECIPE_TEMPLATE: ${{ github.workspace }}/packaging/termux/build.sh.in
+          RECIPE_DIR: ${{ github.workspace }}/termux-packages/custom-packages/${{ env.PACKAGE_NAME }}
+        run: |
+          set -euo pipefail
+
+          src_url="https://codeload.github.com/${GITHUB_REPOSITORY}/tar.gz/${GITHUB_SHA}"
+          curl -fsSL "${src_url}" -o /tmp/${PACKAGE_NAME}.tar.gz
+          src_sha256="$(sha256sum /tmp/${PACKAGE_NAME}.tar.gz | cut -d' ' -f1)"
+          package_version="$(python - <<'PY'
+          import pathlib
+          import tomllib
+
+          with pathlib.Path("Cargo.toml").open("rb") as cargo_toml:
+              print(tomllib.load(cargo_toml)["package"]["version"])
+          PY
+          )"
+
+          mkdir -p "${RECIPE_DIR}"
+
+          PACKAGE_VERSION="${package_version}" \
+          PACKAGE_SRCURL="${src_url}" \
+          PACKAGE_SHA256="${src_sha256}" \
+          PACKAGE_MAINTAINER="@${GITHUB_REPOSITORY_OWNER}" \
+          python - <<'PY'
+          import os
+          from pathlib import Path
+
+          recipe = Path(os.environ["RECIPE_TEMPLATE"]).read_text()
+          replacements = {
+              "@VERSION@": os.environ["PACKAGE_VERSION"],
+              "@SRCURL@": os.environ["PACKAGE_SRCURL"],
+              "@SHA256@": os.environ["PACKAGE_SHA256"],
+              "@MAINTAINER@": os.environ["PACKAGE_MAINTAINER"],
+          }
+
+          for needle, value in replacements.items():
+              recipe = recipe.replace(needle, value)
+
+          output = Path(os.environ["RECIPE_DIR"]) / "build.sh"
+          output.write_text(recipe)
+          output.chmod(0o755)
+          PY
+
+      - name: Build Termux package
+        working-directory: ${{ github.workspace }}/termux-packages
+        run: |
+          set -euo pipefail
+          ./scripts/run-docker.sh ./build-package.sh -I -a aarch64 custom-packages/${PACKAGE_NAME}
+
+      - name: Upload Termux package artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: termux-${{ env.PACKAGE_NAME }}-aarch64
+          path: |
+            ${{ github.workspace }}/termux-packages/output/*.deb
+            ${{ github.workspace }}/termux-packages/output/*.buildinfo
+          if-no-files-found: error

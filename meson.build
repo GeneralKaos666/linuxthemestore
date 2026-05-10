@@ -4,7 +4,7 @@ dependency('glib-2.0')
 dependency('gio-2.0')
 dependency('gtk+-3.0')
 
-subdir('assets')
+subdir('../assets')
 
 i18n = import('i18n')
 gnome = import('gnome')

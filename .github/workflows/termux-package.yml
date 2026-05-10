@@ -36,7 +36,7 @@ jobs:
 
       - name: Render Termux package recipe
         env:
-          RECIPE_TEMPLATE: ${{ github.workspace }}/packaging/termux/build.sh.in
+          RECIPE_TEMPLATE: ${{ github.workspace }}/packaging/termux/build.sh
           RECIPE_DIR: ${{ github.workspace }}/termux-packages/custom-packages/${{ env.PACKAGE_NAME }}
         run: |
           set -euo pipefail

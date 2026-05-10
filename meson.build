@@ -4,8 +4,6 @@ dependency('glib-2.0')
 dependency('gio-2.0')
 dependency('gtk+-3.0')
 
-subdir('../assets')
-
 i18n = import('i18n')
 gnome = import('gnome')
 cargo = find_program('cargo', required: true)

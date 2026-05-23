@@ -6,7 +6,7 @@ TERMUX_PKG_MAINTAINER="@MAINTAINER@"
 TERMUX_PKG_VERSION="@VERSION@"
 TERMUX_PKG_SRCURL="@SRCURL@"
 TERMUX_PKG_SHA256="@SHA256@"
-TERMUX_PKG_DEPENDS="gtk4, libadwaita"
+TERMUX_PKG_DEPENDS="dbus, glib, gsettings-desktop-schemas, gtk4, libadwaita, p7zip, tar, unzip"
 TERMUX_PKG_BUILD_DEPENDS="clang, gtk4, libadwaita, pkg-config, rust"
 TERMUX_PKG_AUTO_UPDATE=false
 

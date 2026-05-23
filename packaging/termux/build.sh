@@ -9,20 +9,24 @@ TERMUX_PKG_SHA256="@SHA256@"
 TERMUX_PKG_DEPENDS="dbus, glib, gsettings-desktop-schemas, gtk4, libadwaita, p7zip, tar, unzip"
 TERMUX_PKG_BUILD_DEPENDS="clang, gtk4, libadwaita, pkg-config, rust"
 TERMUX_PKG_AUTO_UPDATE=false
+TERMUX_PKG_BUILD_IN_SRC=true
 
 termux_step_pre_configure() {
 	termux_setup_rust
 }
 
-termux_step_make_install() {
-	cargo install \
+termux_step_make() {
+	cargo build \
 		--jobs "$TERMUX_PKG_MAKE_PROCESSES" \
 		--locked \
-		--path "$TERMUX_PKG_SRCDIR" \
-		--force \
-		--no-track \
-		--target "$CARGO_TARGET_NAME" \
-		--root "$TERMUX_PREFIX"
+		--release \
+		--target "$CARGO_TARGET_NAME"
+}
+
+termux_step_make_install() {
+	install -Dm700 \
+		"target/$CARGO_TARGET_NAME/release/linuxthemestore" \
+		"$TERMUX_PREFIX/bin/linuxthemestore"
 
 	install -Dm644 \
 		"$TERMUX_PKG_SRCDIR/assets/io.github.debasish_patra_1987.linuxthemestore.desktop" \

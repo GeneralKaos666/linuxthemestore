@@ -783,11 +783,9 @@ fn build_category_page(
         theme_type.to_string(),
     );
 
-    let themecategorysortbybutton = adw::InlineViewSwitcher::new();
+    let themecategorysortbybutton = adw::ViewSwitcher::new();
     themecategorysortbybutton.add_css_class("round");
-    themecategorysortbybutton.set_can_shrink(true);
-
-    let themecategorysortby_view_stack = adw::ViewStack::builder().enable_transitions(true).build();
+    let themecategorysortby_view_stack = adw::ViewStack::new();
 
     themecategorysortbybutton.set_valign(Align::Start);
     themecategorysortbybutton.set_halign(Align::Center);
@@ -879,11 +877,9 @@ fn build_installed_page(
         theme_type.to_string(),
     );
 
-    let themecategorysortbybutton = adw::InlineViewSwitcher::new();
+    let themecategorysortbybutton = adw::ViewSwitcher::new();
     themecategorysortbybutton.add_css_class("round");
-    themecategorysortbybutton.set_can_shrink(true);
-
-    let themecategorysortby_view_stack = adw::ViewStack::builder().enable_transitions(true).build();
+    let themecategorysortby_view_stack = adw::ViewStack::new();
 
     themecategorysortbybutton.set_valign(Align::Start);
     themecategorysortbybutton.set_halign(Align::Center);
@@ -1968,11 +1964,11 @@ fn build_ui(app: &adw::Application) {
 
     // Initial Screen Widgets below Starts
     // View Switcher
-    let view_switcher = adw::InlineViewSwitcher::new();
+    let view_switcher = adw::ViewSwitcher::new();
     view_switcher.add_css_class("round");
 
     // View Stack
-    let view_stack = adw::ViewStack::builder().enable_transitions(true).build();
+    let view_stack = adw::ViewStack::new();
     view_stack.add_css_class("background");
     view_switcher.set_stack(Some(&view_stack));
 
@@ -1983,8 +1979,6 @@ fn build_ui(app: &adw::Application) {
     header_box.set_margin_end(0);
     header_box.set_margin_top(10);
     header_box.set_margin_bottom(10);
-    view_switcher.set_can_shrink(true);
-
     let view_switcher_box = GtkBox::new(Orientation::Horizontal, 0);
     view_switcher_box.set_halign(Align::Center);
     view_switcher_box.append(&view_switcher);
@@ -2020,12 +2014,12 @@ fn build_ui(app: &adw::Application) {
         about_dialog.present(Some(&window_clone));
     });
 
-    let body_switcher_box = adw::InlineViewSwitcher::new();
+    let body_switcher_box = adw::ViewSwitcher::new();
     body_switcher_box.add_css_class("round");
     body_switcher_box.set_valign(Align::Start);
     body_switcher_box.set_halign(Align::Center);
 
-    let body_viewstack = adw::ViewStack::builder().enable_transitions(true).build();
+    let body_viewstack = adw::ViewStack::new();
     let _body_viewstack = body_viewstack.add_titled(&header_box, Some("Browse"), "Browse");
 
     bodybox.append(&header_bar);

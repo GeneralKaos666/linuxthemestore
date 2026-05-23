@@ -17,7 +17,7 @@ env:
 jobs:
   termux-package:
     name: Build Termux package
-    runs-on: termux-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Check out project
@@ -97,7 +97,7 @@ jobs:
 
   termux-deb:
     name: Build Termux .deb
-    runs-on: termux-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Check out project

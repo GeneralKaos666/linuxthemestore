@@ -6,6 +6,10 @@
 
 ## Releases
 
+### 1.0.5-1 (2026-05-22)
+**Added support for Termux
+- Both build and install inside Termux
+
 ### 1.0.5 (2025-06-18)
 **Added ability to apply themes for:**
 - Converted Preview Pics in Detailed Screen to Caraousel
@@ -54,31 +58,7 @@ Here are some screenshots & video preview
 
 [![alt text](https://i.ibb.co/V0TK6Sgg/5.png)](https://github.com/debasish-patra-1987/linuxthemestore/raw/refs/heads/main/screenshots/screencastsample.mp4)
 
-
-## Flatpak
-
-[![Flathub](https://flathub.org/assets/badges/flathub-badge-en.svg)](https://flathub.org/apps/io.github.debasish_patra_1987.linuxthemestore)
-
 ## Installation
-
-For Arch Linux Build is available in aur..
-```
-yay -S linuxthemestore-git
-```
-
-Manual Installation via root
-```
-git clone https://github.com/debasish-patra-1987/linuxthemestore.git
-cd linuxthemestore
-git checkout 46818ef6e0378afcd6f510a472b751a5651a989f
-cargo build --release
-install -Dm755 ./target/release/linuxthemestore -t /usr/bin/
-install -Dm644 ./assets/io.github.debasish_patra_1987.linuxthemestore.metainfo.xml -t /usr/share/metainfo
-install -Dm644 ./assets/io.github.debasish_patra_1987.linuxthemestore.svg -t /usr/share/icons/hicolor/scalable/apps
-mv ./assets/io.github.debasish_patra_1987.linuxthemestore.in ./assets/io.github.debasish_patra_1987.linuxthemestore.desktop
-desktop-file-install --dir=/usr/share/applications ./assets/io.github.debasish_patra_1987.linuxthemestore.desktop
-
-```
 
 ### Build on Termux with Meson
 ```
@@ -86,7 +66,7 @@ pkg install x11-repo
 pkg install rust clang pkg-config gtk4 libadwaita glib tar unzip p7zip dbus gsettings-desktop-schemas python
 pip3 install --user meson
 
-git clone https://github.com/debasish-patra-1987/linuxthemestore.git
+git clone https://github.com/GeneralKaos666/linuxthemestore.git
 cd linuxthemestore
 meson setup build --prefix=$PREFIX
 meson compile -C build

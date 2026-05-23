@@ -2,16 +2,16 @@ project('linuxthemestore', 'rust', version: '0.1.0')
 
 dependency('glib-2.0')
 dependency('gio-2.0')
-dependency('gtk+-3.0')
+dependency('gtk4')
+dependency('libadwaita-1')
 
-i18n = import('i18n')
 gnome = import('gnome')
 cargo = find_program('cargo', required: true)
 sources = [
     'src/main.rs',
 ]
 
-cargo_script = find_program(join_paths(meson.source_root(), 'build-aux/cargo.sh'))
+cargo_script = find_program(join_paths(meson.project_source_root(), 'build-aux/cargo.sh'))
 cargo_release = custom_target(
   'cargo-build',
   build_by_default: true,
@@ -22,8 +22,8 @@ cargo_release = custom_target(
   install_dir: get_option('bindir'),
   command: [
     cargo_script,
-    meson.build_root(),
-    meson.source_root(),
+    meson.project_build_root(),
+    meson.project_source_root(),
     '@OUTPUT@',
     get_option('buildtype'),
     meson.project_name(),
@@ -37,26 +37,18 @@ install_data(
   install_dir: join_paths(get_option('datadir'), 'icons/hicolor/scalable/apps'),
 )
 
-# Configure and install desktop file
-desktop_file = configure_file(
-  input: 'assets/io.github.debasish_patra_1987.linuxthemestore.in',
-  output: 'io.github.debasish_patra_1987.linuxthemestore.desktop',
-  configuration: {'bindir': get_option('prefix') / get_option('bindir')}
-)
-
 install_data(
-  desktop_file,
+  'assets/io.github.debasish_patra_1987.linuxthemestore.desktop',
   install_dir: join_paths(get_option('datadir'), 'applications'),
-  install_mode: ['rwxr-xr-x']
+  install_mode: ['rw-r--r--']
 )
 
 install_data('assets/io.github.debasish_patra_1987.linuxthemestore.metainfo.xml',
   install_dir: join_paths(get_option('datadir'), 'metainfo'),
-  install_mode: ['rwxr-xr-x']
+  install_mode: ['rw-r--r--']
 )
 
 gnome.post_install(
     gtk_update_icon_cache: true,
     update_desktop_database: true,
 )
-

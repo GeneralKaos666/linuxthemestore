@@ -80,6 +80,29 @@ desktop-file-install --dir=/usr/share/applications ./assets/io.github.debasish_p
 
 ```
 
+### Build on Termux with Meson
+```
+pkg install x11-repo
+pkg install rust clang pkg-config gtk4 libadwaita glib tar unzip p7zip dbus gsettings-desktop-schemas python
+pip3 install --user meson
+
+git clone https://github.com/debasish-patra-1987/linuxthemestore.git
+cd linuxthemestore
+meson setup build --prefix=$PREFIX
+meson compile -C build
+meson install -C build
+```
+
+Run it with Termux:X11:
+```
+export DISPLAY=:0
+export XDG_RUNTIME_DIR=$TMPDIR
+export GDK_BACKEND=x11
+dbus-run-session linuxthemestore
+```
+
+On Termux, the Meson/Cargo build defaults to `cargo build -j1` to avoid the `Text file busy` error seen with parallel Cargo jobs.
+
 Manual Uninstallation via root
 ```
 rm /usr/bin/linuxthemestore

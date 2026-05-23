@@ -7,7 +7,7 @@ on:
       - published
 
 permissions:
-  contents: read
+  contents: write
 
 env:
   PACKAGE_NAME: linuxthemestore
@@ -94,3 +94,14 @@ jobs:
             ${{ github.workspace }}/termux-packages/output/*.deb
             ${{ github.workspace }}/termux-packages/output/*.buildinfo
           if-no-files-found: error
+
+      - name: Upload release assets
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh release upload "${{ github.event.release.tag_name }}" \
+            "${{ github.workspace }}/termux-packages/output/"*.deb \
+            "${{ github.workspace }}/termux-packages/output/"*.buildinfo \
+            --clobber

@@ -10,6 +10,10 @@ TERMUX_PKG_DEPENDS="dbus, glib, gsettings-desktop-schemas, gtk4, libadwaita, p7z
 TERMUX_PKG_BUILD_DEPENDS="clang, gtk4, libadwaita, pkg-config, rust"
 TERMUX_PKG_AUTO_UPDATE=false
 
+termux_step_post_get_source() {
+	rm -f "$TERMUX_PKG_SRCDIR/meson.build"
+}
+
 termux_step_pre_configure() {
 	termux_setup_rust
 }

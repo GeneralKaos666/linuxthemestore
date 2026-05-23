@@ -18,19 +18,19 @@ termux_step_make_install() {
 	cargo install \
 		--jobs "$TERMUX_PKG_MAKE_PROCESSES" \
 		--locked \
-		--path . \
+		--path "$TERMUX_PKG_SRCDIR" \
 		--force \
 		--no-track \
 		--target "$CARGO_TARGET_NAME" \
 		--root "$TERMUX_PREFIX"
 
 	install -Dm644 \
-		assets/io.github.debasish_patra_1987.linuxthemestore.desktop \
+		"$TERMUX_PKG_SRCDIR/assets/io.github.debasish_patra_1987.linuxthemestore.desktop" \
 		"$TERMUX_PREFIX/share/applications/io.github.debasish_patra_1987.linuxthemestore.desktop"
 	install -Dm644 \
-		assets/io.github.debasish_patra_1987.linuxthemestore.metainfo.xml \
+		"$TERMUX_PKG_SRCDIR/assets/io.github.debasish_patra_1987.linuxthemestore.metainfo.xml" \
 		"$TERMUX_PREFIX/share/metainfo/io.github.debasish_patra_1987.linuxthemestore.metainfo.xml"
 	install -Dm644 \
-		assets/io.github.debasish_patra_1987.linuxthemestore.svg \
+		"$TERMUX_PKG_SRCDIR/assets/io.github.debasish_patra_1987.linuxthemestore.svg" \
 		"$TERMUX_PREFIX/share/icons/hicolor/scalable/apps/io.github.debasish_patra_1987.linuxthemestore.svg"
 }

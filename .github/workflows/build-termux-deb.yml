@@ -2,6 +2,20 @@ name: Build Termux packages
 
 on:
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Tag name for the release to upload assets to
+        required: true
+        type: string
+      release_title:
+        description: Optional release title when creating a release from a manual run
+        required: false
+        type: string
+      prerelease:
+        description: Mark a newly created manual release as a prerelease
+        required: false
+        default: false
+        type: boolean
   release:
     types:
       - published
@@ -95,12 +109,50 @@ jobs:
             ${{ github.workspace }}/termux-packages/output/*.buildinfo
           if-no-files-found: error
 
+      - name: Ensure target release exists
+        id: target-release
+        if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MANUAL_RELEASE_TAG: ${{ inputs.release_tag }}
+          MANUAL_RELEASE_TITLE: ${{ inputs.release_title }}
+          MANUAL_RELEASE_PRERELEASE: ${{ inputs.prerelease }}
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "release" ]; then
+            release_tag="${{ github.event.release.tag_name }}"
+          else
+            release_tag="${MANUAL_RELEASE_TAG}"
+            if ! gh release view "${release_tag}" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
+              create_args=(
+                "${release_tag}"
+                --repo "${GITHUB_REPOSITORY}"
+                --target "${GITHUB_SHA}"
+                --notes "Manual Termux package build from workflow run ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}."
+              )
+              if [ -n "${MANUAL_RELEASE_TITLE}" ]; then
+                create_args+=(--title "${MANUAL_RELEASE_TITLE}")
+              fi
+              if [ "${MANUAL_RELEASE_PRERELEASE}" = "true" ]; then
+                create_args+=(--prerelease)
+              fi
+              gh release create "${create_args[@]}"
+            fi
+          fi
+          echo "tag=${release_tag}" >> "${GITHUB_OUTPUT}"
+
       - name: Upload release assets
+<<<<<<< Updated upstream
+||||||| ancestor
+        if: github.event_name == 'release'
+=======
+        if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
+>>>>>>> Stashed changes
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          gh release upload "${{ github.event.release.tag_name }}" \
+          gh release upload "${{ steps.target-release.outputs.tag }}" \
             "${{ github.workspace }}/termux-packages/output/"*.deb \
             "${{ github.workspace }}/termux-packages/output/"*.buildinfo \
             --clobber

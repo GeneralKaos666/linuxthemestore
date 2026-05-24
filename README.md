@@ -100,15 +100,6 @@ The package is written to `dist/` as:
 dist/linuxthemestore_<version>-1_aarch64.deb
 ```
 
-Manual runs of `.github/workflows/build-termux-deb.yml` can also publish to GitHub Releases now: start the workflow with a `release_tag`, and it will create that release on the workflow commit if it does not already exist, then upload the generated `.deb` and `.buildinfo` assets.
-
-Useful overrides:
-```
-DEB_MAINTAINER="Your Name <you@example.com>" ./packaging/termux/build-deb.sh
-PACKAGE_VERSION=1.0.5-1 ./packaging/termux/build-deb.sh
-OUT_DIR=$PWD/out ./packaging/termux/build-deb.sh
-```
-
 Install it with:
 ```
 dpkg -i dist/linuxthemestore_<version>-1_aarch64.deb

@@ -142,17 +142,19 @@ jobs:
           echo "tag=${release_tag}" >> "${GITHUB_OUTPUT}"
 
       - name: Upload release assets
-<<<<<<< Updated upstream
-||||||| ancestor
-        if: github.event_name == 'release'
-=======
         if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
->>>>>>> Stashed changes
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
+          shopt -s nullglob
+          assets=("${{ github.workspace }}/termux-packages/output/"*.deb)
+          buildinfo_files=("${{ github.workspace }}/termux-packages/output/"*.buildinfo)
+          if [ "${#assets[@]}" -eq 0 ]; then
+            echo "No .deb files were produced for release upload." >&2
+            exit 1
+          fi
+          assets+=("${buildinfo_files[@]}")
           gh release upload "${{ steps.target-release.outputs.tag }}" \
-            "${{ github.workspace }}/termux-packages/output/"*.deb \
-            "${{ github.workspace }}/termux-packages/output/"*.buildinfo \
+            "${assets[@]}" \
             --clobber

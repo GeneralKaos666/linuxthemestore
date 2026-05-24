@@ -89,7 +89,7 @@ pkg install x11-repo
 pkg install rust clang pkg-config gtk4 libadwaita glib tar unzip p7zip dbus gsettings-desktop-schemas dpkg python
 pip3 install --user meson
 
-git clone https://github.com/debasish-patra-1987/linuxthemestore.git
+git clone https://github.com/GeneralKaos666/linuxthemestore.git
 cd linuxthemestore
 chmod +x packaging/termux/build-deb.sh
 ./packaging/termux/build-deb.sh
